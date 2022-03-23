@@ -11,3 +11,4 @@ my userscripts toolbox
 - click Chrome's extension button (right of URL bar, puzzle piece shaped icon 🧩)
 - Tampermonkey > Dashboard > Utilities > Import from URL
 - paste URL (eg: https://raw.githubusercontent.com/bendelichere/userscripts/main/jenkinslib.js)
+- click "Install" button
