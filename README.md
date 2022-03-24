@@ -14,6 +14,8 @@
 
 - SFCC LIB:
   - dropdown list of sites in alphabetical order 
+  - Manage Sites : added "Open All" links
+  - Manage Sites : added direct links to Settings & Cache
 
 ## install instructions
 
