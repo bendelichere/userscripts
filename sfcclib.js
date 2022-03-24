@@ -363,6 +363,7 @@
     },
 
     bmAddSettingsDirectLink = function () {
+        if (jQuery('td:contains("Storefront Sites")').length == 0) return; 
         let rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(input[type="checkbox"])');
         rows.each(function(){
             var link = jQuery(this).find('a.table_detail_link');console.log(link);
