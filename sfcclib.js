@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      18.7.5.1
+// @version      22.3.24.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -22,7 +22,7 @@
     var runForestRun = function () {
         // LOG LISTING PAGE
         if (isLogPage()) {
-            logsAddSearchBoxes();
+            //logsAddSearchBoxes();
             //logsReOrder();
             //logsHighlightToday();
             //logsCleanDates();
@@ -38,6 +38,7 @@
             bmCleanDates();
             bmSortSites();
             bmSortCustomPref();
+            bmAddSettingsDirectLink();
         }
     },
 
@@ -359,6 +360,25 @@
             }
         }
         console.log('[bmSortSites] '+siteCounter+' sites re-ordered');
+    },
+
+    bmAddSettingsDirectLink = function () {
+        let rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(input[type="checkbox"])');
+        rows.each(function(){
+            var link = jQuery(this).find('a.table_detail_link');console.log(link);
+            var settingsLink = link.clone().text("Settings").attr("href",link[0].href.replace('ViewChannel','ViewChannelDetails'));
+            var cacheLink = link.clone().text("Cache").attr("href",link[0].href.replace('ViewChannel-Edit','ViewChannelPageCache-Start'));
+            link.after(cacheLink).after(" - ").after(settingsLink).after(" - ");
+        });
+        // Open All
+        let openAllGeneral = '<a href="" id="a_open_all_general">General</a>';
+        let openAllSettings = '<a href="" id="a_open_all_settings">Settings</a>';
+        let openAllCache = '<a href="" id="a_open_all_cache">Cache</a>';
+        let openAll=function(linkTxt,event){rows.find('a:contains('+linkTxt+')').each(function(){window.open(jQuery(this).attr('href'),'_blank');});};
+        jQuery('table td.table_header:contains("Name")').html('Open All ('+rows.length+') '+openAllGeneral+' - '+openAllSettings+' - '+openAllCache);
+        jQuery('#a_open_all_general').on('click',function(e){e.preventDefault();openAll('General',e);});
+        jQuery('#a_open_all_settings').on('click',function(e){e.preventDefault();openAll('Settings',e);});
+        jQuery('#a_open_all_cache').on('click',function(e){e.preventDefault();openAll('Cache',e);});
     },
 
     bmCleanDates = function () {//<td class="table_header e s center" nowrap="nowrap">Start</td>
