@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      22.3.24.2
+// @version      22.4.07.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -364,7 +364,8 @@
 
     bmAddSettingsDirectLink = function () {
         if (jQuery('td:contains("Storefront Sites")').length == 0) return; 
-        let rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(input[type="checkbox"])');
+        let rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(input[type=checkbox])');
+        if (rows.length == 0 ) rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(a)');
         rows.each(function(){
             var link = jQuery(this).find('a.table_detail_link');console.log(link);
             var settingsLink = link.clone().text("Settings").attr("href",link[0].href.replace('ViewChannel','ViewChannelDetails'));
