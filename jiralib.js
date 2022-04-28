@@ -18,10 +18,11 @@
     can be used to insert a "feature" or "bug" template into the description field.
     */
     function setupDescriptionTemplateButtons() {
+        var createIssuePageOpen = $("H2").text() == 'Create Issue';
         var ticketDescription = $('#description-wiki-edit');
         var btnFeatureExists = $('#btnFeature').length > 0;
 
-        if (ticketDescription.length && !btnFeatureExists) {
+        if (createIssuePageOpen && !btnFeatureExists) {
             $('#description-wiki-edit')
                 .append("<button id='btnFeature'>add feature template</button>")
                 .append("<button id='btnBug'>add bug template</button>");
