@@ -14,8 +14,8 @@
 (function(){
 
     /**
-    This function adds buttons that will appear on the "Create Issue" modal window that 
-    can be used to insert a "feature" or "bug" template into the description field. 
+    This function adds buttons that will appear on the "Create Issue" modal window that
+    can be used to insert a "feature" or "bug" template into the description field.
     */
     function setupDescriptionTemplateButtons() {
         var ticketDescription = $('#description-wiki-edit');
@@ -63,6 +63,7 @@ TBD
     var realST = window.setTimeout
     window.setTimeout = function(fn,delay) {
         setupDescriptionTemplateButtons();
+        $('time.livestamp').each(function(){$(this).text($(this).parent()[0].title);});
         return realST(fn,delay);
     };
 })();
