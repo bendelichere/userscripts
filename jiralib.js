@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JIRA lib
 // @namespace    napali.boardriders
-// @version      22.3.21.0
+// @version      22.5.2.0
 // @description  let's ticket better
 // @author       Benjamin Delichere
 // @match        https://jira.boardriders.com/*
