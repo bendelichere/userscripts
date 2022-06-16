@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADYEN lib
 // @namespace    napali.boardriders
-// @version      22.6.16.0
+// @version      22.6.16.1
 // @description  let's capture better
 // @author       Benjamin Delichere
 // @match        https://*.adyen.com/*
@@ -14,7 +14,7 @@
 (function(){
 
     var runForestRun = function () {
-        jQuery('#app-content').on('click', '.loading-button',() => {console.log('yepylacliké');autoClickLoadMoreWebhooks();});
+        jQuery('#app-content').on('click', '.loading-button',() => {autoClickLoadMoreWebhooks();});
         autoClickLoadMoreWebhooks();
     };
 
@@ -27,7 +27,7 @@
     };
 
     var autoClickLoadMoreWebhooks = function () {
-        waitForElm('.loading-button').then((elm) => {console.log('yepyléla');window.setTimeout(()=>{jQuery(elm).click();},500);});
+        waitForElm('.loading-button').then((elm) => {window.setTimeout(()=>{jQuery(elm).click();},500);});
     }
 
     runForestRun();
