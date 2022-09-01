@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      22.4.07.1
+// @version      22.9.1.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -35,11 +35,26 @@
         }
         // BUSINESS MANAGER
         else if (isBmPage()) {
-            bmCleanDates();
+            //NOT READY//bmCleanDates();
             bmSortSites();
             bmSortCustomPref();
             bmAddSettingsDirectLink();
+            bmAddDataRepLinks();
+            bmAddGlobalExportDirectLinks();
+            //NOT READY//bmClickFriendlyMenu();
         }
+    },
+
+    ////////////////////////////////
+    //////////// TOOLS /////////////
+    ////////////////////////////////
+
+    waitForElm = function (selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {return resolve(document.querySelector(selector));}
+            const observer = new MutationObserver(mutations => {if (document.querySelector(selector)) {resolve(document.querySelector(selector));observer.disconnect();}});
+            observer.observe(document.body, {childList: true,subtree: true});
+        });
     },
 
     ///////////////////////////////
@@ -362,12 +377,39 @@
         console.log('[bmSortSites] '+siteCounter+' sites re-ordered');
     },
 
+    bmAddDataRepLinks = function () {
+        const allBrands = {'brd': ['QS','RX','DC'], 'bbg': ['BB','RV','EL']};
+
+        if (jQuery('td:contains("Replication Tasks")').length == 0) return;
+        let rows = jQuery('td.dep_check:has(input[name=SelectedGroupID])');
+        window.clickAllCheckboxAlike = function(checkboxId,brand) {
+            if (brand) {
+                jQuery('[name="siteHeader_expanded"] tr:contains("'+brand+'") input[value$="'+checkboxId+'"]').click();
+            } else {
+                jQuery('input[value$="'+checkboxId+'"]').click();
+            }
+        };
+        rows.each(function(){
+            if (jQuery(this).closest('table').find('td.main_dep.n.s.e:contains("Global")').length>0) return;
+            var checkboxIdArr = jQuery(this).find('input[type=checkbox]').val().split('_');
+            checkboxIdArr.shift();
+            var checkboxId = checkboxIdArr.join('_');
+            var currentBrand = jQuery(this).closest('table').find('tr:nth-child(2)').find('td:nth-child(4)').text().replace('&nbsp;','').split('-');
+            var allLink = jQuery('#SelectAll').clone().text("ALL").attr("onclick",'clickAllCheckboxAlike("'+checkboxId+'")');
+            jQuery(this).next('td').append(' ').append(allLink);
+            if (currentBrand.length == 2) {
+                var sameBrandLink = jQuery('#SelectAll').clone().text(currentBrand[0]).attr("onclick",'clickAllCheckboxAlike("'+checkboxId+'","'+currentBrand[0]+'")');
+                jQuery(this).next('td').append(' ').append(sameBrandLink);
+            }
+        });
+    },
+
     bmAddSettingsDirectLink = function () {
-        if (jQuery('td:contains("Storefront Sites")').length == 0) return; 
+        if (jQuery('td:contains("Storefront Sites")').length == 0) return;
         let rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(input[type=checkbox])');
         if (rows.length == 0 ) rows = jQuery(jQuery('td:contains("Select All")').parents('table')[1]).find('tr:has(a)');
         rows.each(function(){
-            var link = jQuery(this).find('a.table_detail_link');console.log(link);
+            var link = jQuery(this).find('a.table_detail_link');
             var settingsLink = link.clone().text("Settings").attr("href",link[0].href.replace('ViewChannel','ViewChannelDetails'));
             var cacheLink = link.clone().text("Cache").attr("href",link[0].href.replace('ViewChannel-Edit','ViewChannelPageCache-Start'));
             link.after(cacheLink).after(" - ").after(settingsLink).after(" - ");
@@ -381,6 +423,45 @@
         jQuery('#a_open_all_general').on('click',function(e){e.preventDefault();openAll('General',e);});
         jQuery('#a_open_all_settings').on('click',function(e){e.preventDefault();openAll('Settings',e);});
         jQuery('#a_open_all_cache').on('click',function(e){e.preventDefault();openAll('Cache',e);});
+    },
+
+    bmAddGlobalExportDirectLinks = function () {
+        waitForElm('#unitSelection div').then((elm)=>{
+            // TOGGLE
+            let dataUnitExportSpan = jQuery('.x-panel-header-text:contains("Data Units to Export")');
+            if (dataUnitExportSpan.length==0) return;
+            let toggleAllFolders = function() {
+                let plusButtons = jQuery('.x-tree-elbow-plus');
+                let minusButtons = jQuery('.x-tree-elbow-minus');
+                if (plusButtons.length > 0) plusButtons.click();
+                else if (minusButtons.length > 0) minusButtons.click();
+            };
+            dataUnitExportSpan.append(' <a href="" id="a_toggle_all_global_export">fold/unfold</a>');
+            jQuery('#a_toggle_all_global_export').on('click',(e)=>{e.preventDefault();toggleAllFolders();});
+
+            // CHECK ALL
+            var allSubCheckboxes = jQuery('#unitSelection ul ul ul input[type=checkbox]');
+            window.clickAllExportCheckbox = function(id) {
+                var nameLike = id.split('_').last();
+                jQuery('#unitSelection ul ul ul div[ext\\:tree-node-id$='+nameLike+'] input[type=checkbox]').click();
+            };
+            window.clickAllBrandExportCheckbox = function(id) {
+                let nameStart = id.split('-').first();
+                let nameEnd = id.split('_').last();
+                jQuery('#unitSelection ul ul ul div[ext\\:tree-node-id^='+nameStart+'][ext\\:tree-node-id$='+nameEnd+'] input[type=checkbox]').click();
+            };
+            allSubCheckboxes.each(function(){
+                // <div ext:tree-node-id="SiteExport_QS-AT_ABTestExport" class="x-tree-node-el x-tree-node-leaf "><div class="x-tree-col" style="width:398px;"><span class="x-tree-node-indent"><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-elbow-line"><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-elbow-line"></span><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-ec-icon x-tree-elbow"><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-node-icon tree_file_icon" unselectable="on"><input class="x-tree-node-cb" type="checkbox"><span unselectable="on">A/B Tests</span></div><div class="x-tree-col " style="width:398px;"><div class="x-tree-col-text">A/B tests of site "QS-AT"</div></div><div class="x-clear"></div></div>
+                let span = jQuery(this).parent().find('span').last();
+                let divId = jQuery(span).parent().parent().attr('ext:tree-node-id');
+                let brand = divId.split('_')[1].split('-').first();
+                let clickAllBrand = ' <a href="" onclick="window.clickAllBrandExportCheckbox(\''+divId+'\')">'+brand+'-only</a>';
+                let clickAll = ' <a href="" onclick="window.clickAllExportCheckbox(\''+divId+'\')">ALL</a>';
+                span.append(clickAllBrand);
+                span.append(clickAll);
+            });
+
+        });
     },
 
     bmCleanDates = function () {//<td class="table_header e s center" nowrap="nowrap">Start</td>
@@ -400,6 +481,26 @@
         for(var i = 0; i < allTds.length; i++){
             callback(allTds,i);
         }
+    },
+
+    bmClickFriendlyMenu = function() {
+        /*window.setTimeout(function() {
+        var adminClickHandler = jQuery._data(jQuery('.menu.admin .menu-overview-link-icon').get(0), "events").click[0].handler;
+        jQuery('ul.bm-site-navigation-menus li').on('click',function(e){
+            adminClickHandler(e);
+        });
+        }, 500);*/
+
+
+        waitForElm('div.slds-context-bar ul').then((elm) => {
+            console.log('here it is !!!');
+            //var adminClickHandler = jQuery._data(jQuery('.menu.admin .menu-overview-link-icon').get(0), "events").click[0].handler;
+            jQuery('ul.bm-site-navigation-menus li').on('click',function(e){
+                //adminClickHandler(e);
+                e.preventDefault();
+                jQuery(jQuery('ul.bm-site-navigation-menus li')[1]).find('a')[0].click()
+            });
+        });
     },
 
     isBmPage = function () {
