@@ -16,6 +16,7 @@
   - dropdown list of sites in alphabetical order 
   - Manage Sites : added "Open All" links
   - Manage Sites : added direct links to Settings & Cache
+  - Site Exports : added "Click all" and "Click all brands" links
 
 ## install instructions
 
