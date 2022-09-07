@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JIRA lib
 // @namespace    napali.boardriders
-// @version      22.5.2.0
+// @version      22.5.3.0
 // @description  let's ticket better
 // @author       Benjamin Delichere
 // @match        https://jira.boardriders.com/*
@@ -18,14 +18,15 @@
     can be used to insert a "feature" or "bug" template into the description field.
     */
     function setupDescriptionTemplateButtons() {
-        var createIssuePageOpen = $("H2").text() == 'Create Issue';
+        var createIssuePageOpen = $("H2").text() == 'Create Issue' || $('#jira-dialog2__heading').text() == 'Create Issue';
         var ticketDescription = $('#description-wiki-edit');
         var btnFeatureExists = $('#btnFeature').length > 0;
 
         if (createIssuePageOpen && !btnFeatureExists) {
-            $('#description-wiki-edit')
-                .append("<button id='btnFeature'>add feature template</button>")
-                .append("<button id='btnBug'>add bug template</button>");
+            ticketDescription.find('.aui-navgroup .aui-nav')
+                .append("<li style='margin-left: .3rem;border-left: 1px solid #dfe1e5;'></li>")
+                .append("<li><button id='btnFeature' class='aui-button aui-button-link' style='margin-left:.3rem;'>add feature template</button></li>")
+                .append("<li><button id='btnBug' class='aui-button aui-button-link' style='margin-left:.6rem;'>add bug template</button></li>");
 
             $('#btnFeature').on('click', function (e) {
                 e.preventDefault();
