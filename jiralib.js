@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JIRA lib
 // @namespace    napali.boardriders
-// @version      22.5.3.0
+// @version      22.5.4.0
 // @description  let's ticket better
 // @author       Benjamin Delichere
 // @match        https://jira.boardriders.com/*
@@ -21,6 +21,7 @@
         var createIssuePageOpen = $("H2").text() == 'Create Issue' || $('#jira-dialog2__heading').text() == 'Create Issue';
         var ticketDescription = $('#description-wiki-edit');
         var btnFeatureExists = $('#btnFeature').length > 0;
+        var selectAllFeatureExists = $('#custom_selectAllFeature').length > 0;
 
         if (createIssuePageOpen && !btnFeatureExists) {
             ticketDescription.find('.aui-navgroup .aui-nav')
@@ -31,16 +32,16 @@
             $('#btnFeature').on('click', function (e) {
                 e.preventDefault();
                 ticketDescription.find('textarea').val(`{panel:title=GENERAL REQUIREMENTS}
-TBD
+  TBD
 {panel}
 {panel:title=TECHNICAL DESIGN}
-The design that the developer is going to implement should be here.
-DEV to fill in.
+  The design that the developer is going to implement should be here.
+  DEV to fill in.
 {panel}
 {panel:title=METADATA / CONTENT / DEPLOYMENT}
-Any metadata needed for this ticket should be defined here.
-Deployment instructions should be here too.
-DEV to fill in.
+  Any metadata needed for this ticket should be defined here.
+  Deployment instructions should be here too.
+  DEV to fill in.
 {panel}
 `);
                 return false;
@@ -49,17 +50,32 @@ DEV to fill in.
             $('#btnBug').on('click', function (e) {
                  e.preventDefault();
                  ticketDescription.find('textarea').val(`{panel:title=ISSUE}
-TBD
+  TBD
 {panel}
 {panel:title=ANALYSIS}
-TBD
+  TBD
 {panel}
 {panel:title=RESOLUTION}
-TBD
+  TBD
 {panel}`);
                  return false;
              });
          }
+
+        if (createIssuePageOpen && !selectAllFeatureExists) {
+
+            // hardcoded to the brands field - could be probably also something which identifies checkbox lists dynamically...
+            var selectallFeature = $('<div id="custom_selectAllFeature"><button type="button" class="aui-button aui-button-link js-select-all">select all</button></div>');
+
+            $('#customfield_10200').append(selectallFeature);
+
+            selectallFeature.find('.js-select-all').click(function () {
+                $(this).closest('.group').find('input.checkbox').prop('checked', true);
+            });
+
+        }
+
+
     }
 
     var realST = window.setTimeout
