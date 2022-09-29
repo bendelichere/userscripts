@@ -1,5 +1,5 @@
 # userscripts
-## my userscripts toolbox
+## multi-site userscripts toolbox
 
 - JENKINS LIB: click heaven !
   - clicking the **Realms** cell toggles ALL the checkboxes 
