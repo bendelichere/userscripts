@@ -18,6 +18,9 @@
   - Manage Sites : added direct links to Settings & Cache
   - Site Exports : added "Click all" and "Click all brands" links
 
+- ADYEN LIB:
+  - Webhooks listing page : auto-click load-more button until no more page to load
+
 ## install instructions
 
 ### install Tampermonkey:
