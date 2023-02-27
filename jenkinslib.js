@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Jenkins lib
 // @namespace    napali.boardriders
-// @version      22.3.23.0
+// @version      23.2.27.0
 // @icon         https://dappv-01.bbgops.com/jenkins/favicon.ico
 // @description  let's click faster
 // @author       Benjamin Delichere
 // @match        https://dappv-01.bbgops.com/jenkins/*
+// @match        https://sem-dev.corp.billabonggroup.com/jenkins/*
 // @grant        none
 // @copyright    Benjamin Delichere
 // @license      X11 (MIT)
