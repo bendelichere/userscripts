@@ -1,11 +1,17 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      22.9.1.1
+// @version      23.5.23.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
-// @match        https://*.demandware.net/*
+// @include        https://*.demandware.net/*
+// @include        https://*.billabong*.*
+// @include        https://*.element*.*
+// @include        https://*.rvca*.*
+// @include        https://*.quiksilver*.*
+// @include        https://*.roxy*.*
+// @include        https://*.dcshoes*.*
 // @grant        none
 // @copyright    Benjamin Delichere
 // @license      X11 (MIT)
@@ -41,8 +47,70 @@
             bmAddSettingsDirectLink();
             bmAddDataRepLinks();
             bmAddGlobalExportDirectLinks();
+            bmAddSearchOrdersSelectAllLink();
+            bmPromotionGuard();
             //NOT READY//bmClickFriendlyMenu();
+        } else if (isStorefront()) {
+            sfCustomPrdAutoFill()
+            sfCartShowSkus()
         }
+    },
+
+    bmPromotionGuard = function () {
+        const warnMsg = '⚠️ CAUTION ⚠️\rthe value "ANY" has been detected in "Required Qualifier"\r⚠️ THIS IS VERY DANGEROUS ⚠️'
+        const confirmSentence = 'I UNDERSTAND THE RISK'
+        const promptMsg = 'If you really want to use the "ANY" value, please type the following sentence in the box bellow:\r\r'+confirmSentence+'\r'
+
+        const detectAnyValue = () => {
+            let anyValueFound = jQuery('div[class$="col-matchMode"]:contains("Any")').length > 0
+            if (anyValueFound) alert(warnMsg)
+            else console.warn('nop, no any')
+            return anyValueFound
+        }
+
+        window.detectAnyValue=detectAnyValue
+
+        const preventSubmit = (e) => {
+            if (detectAnyValue()) {
+                let promptAnswer = prompt(promptMsg)
+                if (promptAnswer === null
+                    || promptAnswer.toLowerCase() !== confirmSentence.toLowerCase()) {
+                    e.preventDefault()
+                    console.warn('Change cancelled')
+                    return false
+                }
+            }
+        }
+
+        const guardPromotions = () => {
+            //detectAnyValue()
+            jQuery('.dw-bm-campaign-editpanel-detailspanel-buttonbar button:contains("Cancel")').css('display','none')
+            jQuery('.x-window-bwrap button:contains("Save")').on('click',(e)=>{return preventSubmit(e)})
+            jQuery('.x-panel-bbar button:contains("Apply")').on('click',(e)=>{return preventSubmit(e)})
+            //waitForElm('.dw-bm-campaign-editpanel-experiencesgrouppanel').then((elm)=>{guardPromotions()})
+        }
+        window.guardPromotions = guardPromotions
+        waitForElm('.dw-bm-campaign-editpanel-experiencesgrouppanel').then((elm)=>{guardPromotions()})
+
+
+        /*const oObserver = new MutationObserver(mutations => {
+            if (document.querySelector('.dw-bm-screen-campaign div')) {
+                console.warn(mutations[0].target.nodeValue);
+                observer.disconnect();
+            }
+        });
+        oObserver.observe((document.querySelector('.dw-bm-screen-campaign'), { subtree: true, characterData: true, childList: true }));*/
+
+        waitForElm('.x-window-plain').then((elm)=>{
+            //var el = document.getElementsByClassName("x-window-plain")[0]
+            var elClone = elm.cloneNode(true);
+            elm.parentNode.replaceChild(elClone, elm);
+            console.warn('cloned x-window-plain')
+            //elm.remove()
+            elClone.remove()
+        })
+
+
     },
 
     ////////////////////////////////
@@ -56,6 +124,48 @@
             observer.observe(document.body, {childList: true,subtree: true});
         });
     },
+
+   forEach = function (array, callback, scope) {
+       for (var i = 0; i < array.length; i++) {
+           callback.call(scope, i, array[i]);
+       }
+   },
+
+  fallbackCopyTextToClipboard = (text) => {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Avoid scrolling to bottom
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+          var successful = document.execCommand('copy');
+          var msg = successful ? 'successful' : 'unsuccessful';
+          console.log('Fallback: Copying text command was ' + msg);
+      } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+      }
+
+      document.body.removeChild(textArea);
+  },
+
+  copyTextToClipboard = (text) => {
+      if (!navigator.clipboard) {
+          fallbackCopyTextToClipboard(text);
+          return;
+      }
+      navigator.clipboard.writeText(text).then(function() {
+          console.log('Async: Copying to clipboard was successful!');
+      }, function(err) {
+          console.error('Async: Could not copy text: ', err);
+      });
+  },
 
     ///////////////////////////////
     //////////// LOGS /////////////
@@ -425,6 +535,19 @@
         jQuery('#a_open_all_cache').on('click',function(e){e.preventDefault();openAll('Cache',e);});
     },
 
+    bmAddSearchOrdersSelectAllLink = function () {
+        waitForElm('label[for=SiteOptionAllSites]').then((elm)=>{
+            let label = jQuery('label[for=SiteOptionAllSites]').first()
+            let clickAllButRuAndEu = ' <a href="#" onclick="window.clickAllButRuAndEu(event)">Select all but RU & EU</a>';
+            label.append(clickAllButRuAndEu)
+            window.clickAllButRuAndEu = function(e) {
+                e.preventDefault()
+                jQuery('#SiteOptions input[type=checkbox]:not([id$="-EU"]):not([id$="-RU"]):not([id$=AllSites])').click()
+                jQuery('#SiteChangeApplyButton').click()
+            }
+        })
+    },
+
     bmAddGlobalExportDirectLinks = function () {
         waitForElm('#unitSelection div').then((elm)=>{
             // TOGGLE
@@ -505,6 +628,79 @@
 
     isBmPage = function () {
         return document.getElementsByClassName('header__logo-image').length>0;
+    },
+
+    isStorefront = () => {
+        if (window.location.host.indexOf('billabong') >= 0 ) return true
+        else if (window.location.host.indexOf('element') >= 0 ) return true
+        else if (window.location.host.indexOf('rvca') >= 0 ) return true
+        else if (window.location.host.indexOf('quiksilver') >= 0 ) return true
+        else if (window.location.host.indexOf('roxy') >= 0 ) return true
+        else if (window.location.host.indexOf('dcshoes') >= 0 ) return true
+        else if (window.location.host.indexOf('/BB-') >= 0 ) return true
+        else if (window.location.host.indexOf('/RV-') >= 0 ) return true
+        else if (window.location.host.indexOf('/EL-') >= 0 ) return true
+        else if (window.location.host.indexOf('/QS-') >= 0 ) return true
+        else if (window.location.host.indexOf('/RX-') >= 0 ) return true
+        else if (window.location.host.indexOf('/DC-') >= 0 ) return true
+        else return false
+    },
+
+    isProduction = () => {
+        if (window.location.host.indexOf('prod') >= 0 ) return true
+        else if (window.location.host.indexOf('production') >= 0 ) return true
+        else if (window.location.host.indexOf('stg') >= 0 ) return false
+        else if (window.location.host.indexOf('staging') >= 0 ) return false
+        else if (window.location.host.indexOf('dev') >= 0 ) return false
+        else if (window.location.host.indexOf('development') >= 0 ) return false
+        else return true
+    },
+
+    sfCartShowSkus = () => {
+        jQuery('div.productid').css('display','block')
+        if (jQuery('p#master-product-id')
+            && typeof utag !== 'undefined'
+            && typeof utag.data !== 'undefined'
+            && typeof utag.data.product_id !== 'undefined'
+            && utag.data.product_id.length > 0) {
+            jQuery('.r-details-features button.r-slide-action-title').click()
+            jQuery('p#master-product-id').append('<span>'+utag.data.product_id[0]+'</span>')
+        }
+    },
+
+    sfCustomPrdAutoFill = () => {
+        if (window.location.href.indexOf('custom-') >= 0) {
+            waitForElm('.purchaseButton-container').then((elm)=>{
+                let configDiv = jQuery('div.configurator')
+                let linkQuickCustom = '<a href="#" id="a_quick_custom_clicked">randomize</a>';
+                configDiv.prepend(linkQuickCustom)
+                jQuery(document).on("click",".color", function(){
+                    var panel = jQuery(this).parent("div").prev().find("span.label").text().replace(/ /g, '_');
+                    var color = jQuery(this).children("span").text();
+                    customs.colorActive( this );
+                    if(true) {
+                        customs.changeColor( panel , color );
+                        return false;
+                    }
+                });
+                jQuery('#a_quick_custom_clicked').on('click',(e)=>{
+                    e.preventDefault()
+                    var allLis = jQuery('.panelGroup li .panel-box')
+                    for (let j=0; j<10; j++) {
+                        for (let i=0; i<allLis.length; i++) {
+                            //jQuery(allLis[i]).click()
+                            let colorsDivs = jQuery(allLis[i]).parent().find('div.colorGroup div.color')
+                            let randColor = Math.floor(Math.random() * colorsDivs.length)
+                            //var parentpanel = jQuery(allLis[i]).jQuery(allLis[i]).
+
+                            window.setTimeout(()=>{jQuery(colorsDivs)[randColor].click()},Math.floor(Math.random() * 500))
+                        }
+                    }
+                    jQuery(jQuery('div.size-button'))[Math.floor(Math.random() * jQuery('div.size-button').length)].click()
+                    //jQuery('span.purchaseButton').click()
+                })
+            })
+        }
     }
 
     ;
