@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      23.5.30.1
+// @version      23.5.30.2
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
