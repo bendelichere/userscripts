@@ -13,6 +13,7 @@
   - replace durations in the comments title by the real datetime (we don't want to know that a comment was posted 5 days ago, we want the exact date and time)
 
 - SFCC LIB:
+  - prevent "Any" required qualifiers unintentional creation in Campaign editor
   - dropdown list of sites in alphabetical order 
   - Manage Sites : added "Open All" links
   - Manage Sites : added direct links to Settings & Cache
