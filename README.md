@@ -47,9 +47,18 @@ Then proceed to installing one (or several) of the toolbox libraries provided he
 - voilà ! (goto Jenkins, Jira, or SFCC and enjoy)
 
 ## update instructions
+First go to Tampermonkey's installed scripts dashboard:
 - click Chrome's extension button (right of URL bar, puzzle piece shaped icon 🧩)
 - click the **Tampermonkey** label (not the 3 dots)
 - click the **Dashboard** label (it will open a new browser tab)
+
+Before triggering a forced update, we must make sure that the script is configured to allow updates:
+- click the installed lib's name, this will open an editor with two tabs : **Edit** and **Parameters**
+- click on the **Parameters** tab
+- click the **Check for updates** checkbox in the **Updates** area
+- click the **Save** button
+
+Then you can trigger a forced update:
 - click SFCC lib's checkbox (on the left of the installed scripts list)
 - select the **Trigger Update** action in **Apply this to all selected scripts** selectbox
 - click the **Start** button
