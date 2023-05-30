@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      23.5.23.1
+// @version      23.5.30.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -83,30 +83,16 @@
         }
 
         const guardPromotions = () => {
-            //detectAnyValue()
             jQuery('.dw-bm-campaign-editpanel-detailspanel-buttonbar button:contains("Cancel")').css('display','none')
             jQuery('.x-window-bwrap button:contains("Save")').on('click',(e)=>{return preventSubmit(e)})
             jQuery('.x-panel-bbar button:contains("Apply")').on('click',(e)=>{return preventSubmit(e)})
-            //waitForElm('.dw-bm-campaign-editpanel-experiencesgrouppanel').then((elm)=>{guardPromotions()})
         }
         window.guardPromotions = guardPromotions
         waitForElm('.dw-bm-campaign-editpanel-experiencesgrouppanel').then((elm)=>{guardPromotions()})
-
-
-        /*const oObserver = new MutationObserver(mutations => {
-            if (document.querySelector('.dw-bm-screen-campaign div')) {
-                console.warn(mutations[0].target.nodeValue);
-                observer.disconnect();
-            }
-        });
-        oObserver.observe((document.querySelector('.dw-bm-screen-campaign'), { subtree: true, characterData: true, childList: true }));*/
-
         waitForElm('.x-window-plain').then((elm)=>{
-            //var el = document.getElementsByClassName("x-window-plain")[0]
             var elClone = elm.cloneNode(true);
             elm.parentNode.replaceChild(elClone, elm);
             console.warn('cloned x-window-plain')
-            //elm.remove()
             elClone.remove()
         })
 
@@ -686,7 +672,7 @@
                 jQuery('#a_quick_custom_clicked').on('click',(e)=>{
                     e.preventDefault()
                     var allLis = jQuery('.panelGroup li .panel-box')
-                    for (let j=0; j<10; j++) {
+                    for (let j=0; j<1; j++) {
                         for (let i=0; i<allLis.length; i++) {
                             //jQuery(allLis[i]).click()
                             let colorsDivs = jQuery(allLis[i]).parent().find('div.colorGroup div.color')
