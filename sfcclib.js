@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      23.5.30.2
+// @version      23.5.30.3
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -61,7 +61,7 @@
         const confirmSentence = 'I UNDERSTAND THE RISK'
         const promptMsg = 'If you really want to use the "ANY" value, please type the following sentence in the box bellow:\r\r'+confirmSentence+'\r'
 
-        const detectAnyValue = () => {
+        var detectAnyValue = () => {
             let anyValueFound = jQuery('div[class$="col-matchMode"]:contains("Any")').length > 0
             if (anyValueFound) alert(warnMsg)
             else console.warn('nop, no any')
@@ -70,7 +70,7 @@
 
         window.detectAnyValue=detectAnyValue
 
-        const preventSubmit = (e) => {
+        var preventSubmit = (e) => {
             if (detectAnyValue()) {
                 let promptAnswer = prompt(promptMsg)
                 if (promptAnswer === null
@@ -82,10 +82,11 @@
             }
         }
 
-        const guardPromotions = () => {
+        var guardPromotions = () => {
             jQuery('.dw-bm-campaign-editpanel-detailspanel-buttonbar button:contains("Cancel")').css('display','none')
             jQuery('.x-window-bwrap button:contains("Save")').on('click',(e)=>{return preventSubmit(e)})
             jQuery('.x-panel-bbar button:contains("Apply")').on('click',(e)=>{return preventSubmit(e)})
+            //waitForElm('.dw-bm-campaign-editpanel-experiencesgrouppanel').then((elm)=>{guardPromotions()})
         }
         window.guardPromotions = guardPromotions
         waitForElm('.dw-bm-campaign-editpanel-experiencesgrouppanel').then((elm)=>{guardPromotions()})
