@@ -59,7 +59,7 @@ Before triggering a forced update, we must make sure that the script is configur
 - click the **Save** button
 
 Then you can trigger a forced update:
-- click SFCC lib's checkbox (on the left of the installed scripts list)
+- click the installed lib's checkbox (on the left of the installed scripts list)
 - select the **Trigger Update** action in **Apply this to all selected scripts** selectbox
 - click the **Start** button
 - if an update is available, a review page will be displayed, showing latest changes in the code
