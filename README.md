@@ -24,15 +24,18 @@
 
 ## install instructions
 
+If it's not already installed on your Google Chrome browser, please install the Tampermonkey extenstion.
+Then proceed to installing one (or several) of the toolbox libraries provided here.
+
 ### install Tampermonkey:
 - go to https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo
 - click the **Add to Chrome** button
 
 ### install scripts in Tampermonkey:
-- copy one of the scripts to install
+- copy the script's URL you want to install
+  - SFCC LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/sfcclib.js
   - JENKINS LIB : https://raw.githubusercontent.com/bendelichere/userscripts/main/jenkinslib.js
   - JIRA LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/jiralib.js
-  - SFCC LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/sfcclib.js
   - ADYEN LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/adyenlib.js
 - click Chrome's extension button (right of URL bar, puzzle piece shaped icon 🧩)
 - click the **Tampermonkey** label (not the 3 dots)
@@ -42,3 +45,13 @@
 - click **Install** button
 - click **Install** button (yes, the other one)
 - voilà ! (goto Jenkins, Jira, or SFCC and enjoy)
+
+## update instructions
+- click Chrome's extension button (right of URL bar, puzzle piece shaped icon 🧩)
+- click the **Tampermonkey** label (not the 3 dots)
+- click the **Dashboard** label (it will open a new browser tab)
+- click SFCC lib's checkbox (on the left of the installed scripts list)
+- select **Trigger Update** action in **Apply this to all selected scripts** selectbox
+- click **Start** button
+- voilà ! (goto Jenkins, Jira, or SFCC and enjoy)
+
