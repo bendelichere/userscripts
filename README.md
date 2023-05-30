@@ -51,7 +51,9 @@ Then proceed to installing one (or several) of the toolbox libraries provided he
 - click the **Tampermonkey** label (not the 3 dots)
 - click the **Dashboard** label (it will open a new browser tab)
 - click SFCC lib's checkbox (on the left of the installed scripts list)
-- select **Trigger Update** action in **Apply this to all selected scripts** selectbox
-- click **Start** button
+- select the **Trigger Update** action in **Apply this to all selected scripts** selectbox
+- click the **Start** button
+- if an update is available, a review page will be displayed, showing latest changes in the code
+- click the **Update** button
 - voilà ! (goto Jenkins, Jira, or SFCC and enjoy)
 
