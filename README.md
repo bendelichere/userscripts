@@ -22,6 +22,9 @@
 - ADYEN LIB:
   - Webhooks listing page : auto-click load-more button until no more page to load
 
+- NST LIB:
+  - adds a product search form on top of order details page
+
 ## install instructions
 
 If it's not already installed on your Google Chrome browser, please install the Tampermonkey extenstion.
@@ -37,6 +40,7 @@ Then proceed to installing one (or several) of the toolbox libraries provided he
   - JENKINS LIB : https://raw.githubusercontent.com/bendelichere/userscripts/main/jenkinslib.js
   - JIRA LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/jiralib.js
   - ADYEN LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/adyenlib.js
+  - NST LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/nstlib.js
 - click Chrome's extension button (right of URL bar, puzzle piece shaped icon 🧩)
 - click the **Tampermonkey** label (not the 3 dots)
 - click the **Dashboard** label (it will open a new browser tab)
