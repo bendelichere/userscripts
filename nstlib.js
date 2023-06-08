@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      23.6.1.1
+// @version      23.6.8.2
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
@@ -19,7 +19,7 @@
     ///////////////////////////////
     // let's get things done
 
-    var waitForElm = function (selector) {
+    var waitForElm = (selector) => {
         return new Promise(resolve => {
             if (document.querySelector(selector)) {return resolve(document.querySelector(selector))}
             const observer = new MutationObserver(mutations => {if (document.querySelector(selector)) {resolve(document.querySelector(selector));observer.disconnect()}})
@@ -37,7 +37,14 @@
         })
     }
 
-    var doAddProductSearchForm = (elm) => {
+    var doAddProductSearchForm = () => {
+        waitForElm('span.bp3-button-text').then((elm)=>{addProductSearchForm(elm)})
+        delegate(document, "click", "a", (event) => {waitForElm('span.bp3-button-text').then((elm)=>{addProductSearchForm(elm)})})
+    }
+
+    var addProductSearchForm = (elm) => {
+        if (document.getElementById('brdSearchOrder')) return false;
+
         var leForm = document.createElement("form")
         leForm.setAttribute("method", "get")
         leForm.setAttribute("action", "#")
@@ -58,13 +65,50 @@
         if (typeof leDiv !== 'undefined') leDiv.insertBefore(leForm,leButton)
     }
 
-    var runForestRun = function () {
+    var doAutoOpenLeftav = () => {
+        waitForElm('div.nom menu').then((elm)=>{
+            document.querySelectorAll('[data-icon="chevron-right"]').forEach((elm)=>{
+                elm.parentNode.click()
+            })
+        })
+    }
+
+    var doAddSkuInventoryLink = () => {
+        waitForElm('div.nom-main span.ant-descriptions-item-label').then((elm)=>{
+            document.querySelectorAll('span.ant-descriptions-item-label').forEach((elm)=>{
+                if (elm.innerHTML=='SKU') {
+                    var currentSKU = elm.nextSibling.innerHTML
+                    var aLinkToInventory = document.createElement("a")
+                    aLinkToInventory.target = '_blank'
+                    aLinkToInventory.href = '/catalog/stocks?page=0&pageSize=100&q='+currentSKU
+                    aLinkToInventory.innerHTML = currentSKU
+                    elm.nextSibling.innerHTML = aLinkToInventory.outerHTML
+                }
+            });
+        })
+    }
+
+    var doAutoOpenIfOneOrderFound = () => {
+        waitForElm('div.nom-main div.ReactTable div.rt-th span span span').then((elm)=>{
+            if (document.querySelectorAll('div.rt-th span span span')[0].innerHTML.indexOf('Order ID')>-1
+                   && document.querySelectorAll('div.rt-tr').length == 2) {
+               document.querySelectorAll('div.rt-tr')[1].querySelector('div.rt-td a').click()
+            }
+        })
+    }
+
+    var runForestRun = () => {
         // add order search form in order detail page
-        waitForElm('span.bp3-button-text').then((elm)=>{doAddProductSearchForm(elm)})
-        delegate(document, "click", "a", (event) => {waitForElm('span.bp3-button-text').then((elm)=>{doAddProductSearchForm(elm)})})
+        doAddProductSearchForm()
 
         // add link to product's inventory beside product's SKU
-        // /catalog/stocks?page=0&pageSize=100&q=3613378672501
+        doAddSkuInventoryLink()
+
+        // auto open leftnav submenus
+        doAutoOpenLeftav()
+
+        // if 1 order found open order details page
+        doAutoOpenIfOneOrderFound()
     }
 
     // time to RUN !!!
