@@ -41,6 +41,7 @@ Then proceed to installing one (or several) of the toolbox libraries provided he
   - JIRA LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/jiralib.js
   - ADYEN LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/adyenlib.js
   - NST LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/nstlib.js
+  - AWS LIB https://raw.githubusercontent.com/bendelichere/userscripts/main/awslib.js
 - click Chrome's extension button (right of URL bar, puzzle piece shaped icon 🧩)
 - click the **Tampermonkey** label (not the 3 dots)
 - click the **Dashboard** label (it will open a new browser tab)
