@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AWS lib
 // @namespace    napali.boardriders
-// @version      23.11.15.2
+// @version      23.11.16.1
 // @icon         https://d19soru4bzonzg.cloudfront.net/assets/Prod/us-west-2/3890bfbe9059870174d403d8d884fd0e/favicon.png
 // @description  let's enhance some stuff (dashboard)
 // @author       Benjamin Delichere
@@ -65,8 +65,8 @@
     }
 
     var doLinkyfyOrderIds = () => {
-        iterateAndCallback('div.cwdb-scrollGrid-container',(elm)=>{doAddLinkCallback(elm)})
-        iterateAndCallback('div.cwdb-widget-preview-wrapper',(elm)=>{doAddLinkCallback(elm)})
+        iterateAndCallback('#custom-dashboard div.cwdb-scrollGrid-container',(elm)=>{doAddLinkCallback(elm)})
+        iterateAndCallback('body div.cwdb-widget-preview-wrapper div.cwdb-scrollGrid',(elm)=>{doAddLinkCallback(elm)})
     }
 
     var runForestRun = () => {
