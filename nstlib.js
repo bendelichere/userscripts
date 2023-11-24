@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      23.6.8.2
+// @version      23.11.24.1
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
@@ -18,6 +18,30 @@
     //////////// MAIN /////////////
     ///////////////////////////////
     // let's get things done
+
+    var interceptFetch = (interceptingCallback) => {
+        const {fetch: origFetch} = window;
+        window.fetch = async (...args) => {
+            const response = await origFetch(...args);
+            response
+                .clone()
+                .json()
+                .then(data => interceptingCallback(data))
+                .catch(err => console.error(err));
+
+            /* the original response can be resolved unmodified: */
+            return response
+
+            /* or mock the response: */
+            /*return new Response(JSON.stringify({
+                userId: 1,
+                id: 1,
+                title: "Mocked!!",
+                completed: false
+            }))*/
+        }
+    }
+
 
     var waitForElm = (selector) => {
         return new Promise(resolve => {
@@ -97,6 +121,17 @@
         })
     }
 
+    var doDisplayOrdersCount = () => {
+        interceptFetch((data)=>{
+            if (typeof data.pagination_info === 'undefined') return false
+            if (typeof data.pagination_info.total === 'undefined') return false
+            if (typeof data.pagination_info.next_url === 'undefined') return false
+            if (data.pagination_info.next_url.indexOf('customer_orders') == -1) return false
+            document.querySelector('[data-id="orders_header"] h1').innerHTML = 'Orders ('+data.pagination_info.total+')'
+
+        })
+    }
+
     var runForestRun = () => {
         // add order search form in order detail page
         doAddProductSearchForm()
@@ -109,6 +144,9 @@
 
         // if 1 order found open order details page
         doAutoOpenIfOneOrderFound()
+
+        // add the orders count somewhere on the page
+        doDisplayOrdersCount()
     }
 
     // time to RUN !!!
