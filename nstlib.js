@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      23.11.24.1
+// @version      23.11.24.2
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
-// @include      https://*.newstore.net/*
+// @match      https://*.newstore.net/*
 // @grant        none
 // @copyright    Benjamin Delichere
 // @license      X11 (MIT)
@@ -19,7 +19,7 @@
     ///////////////////////////////
     // let's get things done
 
-    var interceptFetch = (interceptingCallback) => {
+    var onFetch = (interceptingCallback) => {
         const {fetch: origFetch} = window;
         window.fetch = async (...args) => {
             const response = await origFetch(...args);
@@ -122,13 +122,14 @@
     }
 
     var doDisplayOrdersCount = () => {
-        interceptFetch((data)=>{
+        onFetch((data)=>{
             if (typeof data.pagination_info === 'undefined') return false
             if (typeof data.pagination_info.total === 'undefined') return false
             if (typeof data.pagination_info.next_url === 'undefined') return false
             if (data.pagination_info.next_url.indexOf('customer_orders') == -1) return false
-            document.querySelector('[data-id="orders_header"] h1').innerHTML = 'Orders ('+data.pagination_info.total+')'
+            if (document.querySelector('[data-id="orders_header"] h1') === null) return false
 
+            document.querySelector('[data-id="orders_header"] h1').innerHTML = 'Orders ('+data.pagination_info.total+')'
         })
     }
 
