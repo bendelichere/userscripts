@@ -24,6 +24,8 @@
 
 - NST LIB:
   - adds a product search form on top of order details page
+  - adds an order count in order listing page
+  - adds a stock count in the stock listing page
 
 ## install instructions
 
