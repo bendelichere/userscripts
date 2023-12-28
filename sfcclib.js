@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      23.12.28.1
+// @version      23.12.28.2
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -60,7 +60,15 @@
 
     bmPrettySearchOrders = function () {
         document.querySelector('#C form table').setAttribute('width','')
+        document.querySelector('#D table').setAttribute('width','')
+        document.querySelector('#E form table').setAttribute('width','')
         document.querySelector('#bm_content_column > table > tbody > tr > td > table > tbody > tr > td.top > form > div:nth-child(4) > table').setAttribute('width','')
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(1)').setAttribute('width','')
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(2)').setAttribute('width','')
+        document.querySelector('#D > form > table.infobox.w.e.s').style = ''
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(34) > td:nth-child(5)').setAttribute('width','')
+        var searchExtensions = document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML = searchExtensions.replace(/,/g,'<br>')
     },
 
     bmPromotionGuard = function () {
