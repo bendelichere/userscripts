@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      23.5.30.3
+// @version      23.12.28.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -49,11 +49,18 @@
             bmAddGlobalExportDirectLinks();
             bmAddSearchOrdersSelectAllLink();
             bmPromotionGuard();
+            bmPrettySearchOrders();
             //NOT READY//bmClickFriendlyMenu();
         } else if (isStorefront()) {
             sfCustomPrdAutoFill()
             sfCartShowSkus()
+            sfPdpShowSkus()
         }
+    },
+
+    bmPrettySearchOrders = function () {
+        document.querySelector('#C form table').setAttribute('width','')
+        document.querySelector('#bm_content_column > table > tbody > tr > td > table > tbody > tr > td.top > form > div:nth-child(4) > table').setAttribute('width','')
     },
 
     bmPromotionGuard = function () {
@@ -103,6 +110,16 @@
     ////////////////////////////////
     //////////// TOOLS /////////////
     ////////////////////////////////
+
+    delegate = (el, evt, sel, handler) => {
+        el.addEventListener(evt, function(event) {
+            var t = event.target;
+            while (t && t !== this) {
+                if (t.matches(sel)) {handler.call(t, event)}
+                t = t.parentNode
+            }
+        })
+    },
 
     waitForElm = function (selector) {
         return new Promise(resolve => {
@@ -644,6 +661,7 @@
     },
 
     sfCartShowSkus = () => {
+        if (typeof jQuery === 'undefined') return false
         jQuery('div.productid').css('display','block')
         if (jQuery('p#master-product-id')
             && typeof utag !== 'undefined'
@@ -653,6 +671,37 @@
             jQuery('.r-details-features button.r-slide-action-title').click()
             jQuery('p#master-product-id').append('<span>'+utag.data.product_id[0]+'</span>')
         }
+    },
+
+    sfPdpShowSkus = () => {
+        var doShowSku = () => {
+            console.warn('coucou')
+            var sku = document.querySelectorAll('input.omni_productid')
+            if (sku.length === 0) return false
+            sku = sku[0].value
+
+            var leSpanDesc = document.createElement('span')
+            leSpanDesc.innerHTML = 'Product ID&nbsp;&nbsp;'
+            leSpanDesc.setAttribute('class', 'color-label')
+            var leSpanVal = document.createElement('span')
+            leSpanVal.innerHTML = sku
+            var leP = document.createElement('p')
+
+            leP.appendChild(leSpanDesc)
+            leP.appendChild(leSpanVal)
+
+            var leDiv = document.querySelectorAll('form.variantsForm div div div.r-attrTitle-color')
+            if (leDiv.length !== 1) return false
+
+            leDiv[0].prepend(leP)
+        }
+
+        waitForElm('input.omni_productid').then((elm)=>{
+            doShowSku()
+            var pdpdMain = document.querySelectorAll('#content div.producttop')
+            //delegate(pdpdMain[0], "DOMSubtreeModified", "div.r-producttop-wrapper", (event) => {doShowSku()})
+        })
+
     },
 
     sfCustomPrdAutoFill = () => {
