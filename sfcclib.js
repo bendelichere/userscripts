@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      23.12.28.2
+// @version      24.3.13.1
 // @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -51,6 +51,7 @@
             bmPromotionGuard();
             bmPrettySearchOrders();
             //NOT READY//bmClickFriendlyMenu();
+            bmEnhanceDataReplicationHistory()
         } else if (isStorefront()) {
             sfCustomPrdAutoFill()
             sfCartShowSkus()
@@ -58,10 +59,43 @@
         }
     },
 
+    bmEnhanceDataReplicationHistory = () => {
+
+        // are we in data replication history page ?
+        let pageTitleElement = document.getElementsByClassName('table_title')
+        if (pageTitleElement.length == 0) return
+        if (pageTitleElement[0].innerHTML !== 'Data Replication Processes') return
+
+        // do we have a Title column
+        //let targetElement;
+        ///[...document.getElementsByClassName('infobox_title')].forEach(e=>{if (e.innerHTML.match('Status')!== null) targetElement = e})
+        let targetElement = jQuery('.infobox_title:contains("Target")')
+        if (typeof targetElement === 'undefined') return
+
+        // add a fold/unfold link near the Title header
+        let toggleAllFolders = () => {[...document.getElementsByClassName('table_detail_link2')].forEach(e=>{e.click()})}
+        targetElement.prepend(' <a href="" id="a_toggle_all_global_export">fold/unfold</a>')
+        jQuery('#a_toggle_all_global_export').on('click',e=>{e.preventDefault();toggleAllFolders();})
+
+    },
+
     bmPrettySearchOrders = function () {
+
+        // are we in orders listing page ?
+        let pageTitleElement = document.getElementsByClassName('overview_title')
+        if (pageTitleElement.length == 0) return
+        if (pageTitleElement[0].innerHTML !== 'Data Replication Processes') return
+
+        if (document.getElementsByClassName('overview_title').length === 0) return
+        if (document.getElementsByClassName('overview_title')[0].innerHTML.indexOf('Orders') === null) return
+        //overview_title
+        //OrderListForm
+
         document.querySelector('#C form table').setAttribute('width','')
         document.querySelector('#D table').setAttribute('width','')
         document.querySelector('#E form table').setAttribute('width','')
+
+
         document.querySelector('#bm_content_column > table > tbody > tr > td > table > tbody > tr > td.top > form > div:nth-child(4) > table').setAttribute('width','')
         document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(1)').setAttribute('width','')
         document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(2)').setAttribute('width','')
