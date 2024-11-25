@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         JIRA lib
 // @namespace    napali.boardriders
-// @version      22.5.4.0
+// @version      24.11.25.0
 // @description  let's ticket better
 // @author       Benjamin Delichere
 // @match        https://jira.boardriders.com/*
+// @match        https://jira.napali.app/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=boardriders.com
 // @grant        none
 // @copyright    Benjamin Delichere
@@ -12,6 +13,21 @@
 // ==/UserScript==
 
 (function(){
+
+    var waitForElm = function (selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector))
+            }
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector))
+                    observer.disconnect()
+                }
+            })
+            observer.observe(document.body, {childList: true,subtree: true})
+        })
+    }
 
     /**
     This function adds buttons that will appear on the "Create Issue" modal window that
@@ -78,10 +94,24 @@
 
     }
 
-    var realST = window.setTimeout
-    window.setTimeout = function(fn,delay) {
-        setupDescriptionTemplateButtons();
-        $('time.livestamp').each(function(){$(this).text($(this).parent()[0].title);});
-        return realST(fn,delay);
-    };
+    var removeBanner = function () {
+        const elmSelector = '#announcement-banner'
+        waitForElm(elmSelector).then((elm) => {
+            jQuery(elmSelector).remove()
+        })
+    }
+
+    var runForestRun = function () {
+
+        /*var realST = window.setTimeout
+        window.setTimeout = function(fn,delay) {
+            setupDescriptionTemplateButtons();
+            $('time.livestamp').each(function(){$(this).text($(this).parent()[0].title);});
+            return realST(fn,delay);
+        };*/
+
+        removeBanner()
+    }
+
+    runForestRun()
 })();
