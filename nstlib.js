@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      25.6.12.1
+// @version      25.6.12.2
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
