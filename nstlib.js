@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      23.11.24.2
+// @version      25.6.12.1
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
-// @match      https://*.newstore.net/*
+// @match        https://*.newstore.net/*
 // @grant        none
 // @copyright    Benjamin Delichere
 // @license      X11 (MIT)
@@ -133,6 +133,12 @@
         })
     }
 
+    var doSkipLoginRedirectPage = () => {
+        waitForElm('div#root a[href*="/login/perform"]').then((elm)=>{
+            elm.click();
+        });
+    }
+
     var runForestRun = () => {
         // add order search form in order detail page
         doAddProductSearchForm()
@@ -146,8 +152,11 @@
         // if 1 order found open order details page
         doAutoOpenIfOneOrderFound()
 
-        // add the orders count somewhere on the page
-        doDisplayOrdersCount()
+        // add orders, stock counters
+        doAddCounters()
+
+        // automatically skip login redirect page
+        doSkipLoginRedirectPage()
     }
 
     // time to RUN !!!
