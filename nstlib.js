@@ -152,9 +152,6 @@
         // if 1 order found open order details page
         doAutoOpenIfOneOrderFound()
 
-        // add orders, stock counters
-        doAddCounters()
-
         // automatically skip login redirect page
         doSkipLoginRedirectPage()
     }
