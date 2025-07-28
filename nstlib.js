@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      25.6.12.2
+// @version      25.7.28.1
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
@@ -139,6 +139,22 @@
         });
     }
 
+    var doClickLoginButton = () => {
+        waitForElm('#btn-login').then((elm)=>{
+            if (document.getElementById("email").value.length > 0
+            && document.getElementById("password").value.length > 0) {
+                setTimeout(()=>elm.click(), 200);
+            }
+            else {
+                console.log('not ready')
+                console.log(document.getElementById("email").value)
+                console.log(document.getElementById("password").value)
+            }
+        });
+    }
+
+
+
     var runForestRun = () => {
         // add order search form in order detail page
         doAddProductSearchForm()
@@ -154,6 +170,9 @@
 
         // automatically skip login redirect page
         doSkipLoginRedirectPage()
+
+        // try to click login button if we are on login page
+        doClickLoginButton()
     }
 
     // time to RUN !!!
