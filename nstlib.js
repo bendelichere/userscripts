@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NST lib
 // @namespace    napali.boardriders
-// @version      25.7.28.1
+// @version      25.7.28.2
 // @icon         https://manager.boardriders-staging.p.newstore.net/favicon.ico
 // @description  let's enhance some stuff (order search)
 // @author       Benjamin Delichere
@@ -141,10 +141,15 @@
 
     var doClickLoginButton = () => {
         waitForElm('#btn-login').then((elm)=>{
-            if (document.getElementById("email").value.length > 0
-            && document.getElementById("password").value.length > 0) {
-                setTimeout(()=>elm.click(), 200);
-            }
+            setTimeout(()=>{
+                if (document.getElementById("email")?.value?.length !== undefined) {
+                    console.log('no pre-filled email')
+                } else if (document.getElementById("password")?.value?.length !== undefined) {
+                    console.log('no pre-filled passord')
+                } else {
+                    elm.click()
+                }
+            }, 250);
         });
     }
 
