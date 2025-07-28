@@ -142,9 +142,9 @@
     var doClickLoginButton = () => {
         waitForElm('#btn-login').then((elm)=>{
             setTimeout(()=>{
-                if (document.getElementById("email")?.value?.length !== undefined) {
+                if (document.getElementById("email")?.value?.length === undefined) {
                     console.log('no pre-filled email')
-                } else if (document.getElementById("password")?.value?.length !== undefined) {
+                } else if (document.getElementById("password")?.value?.length === undefined) {
                     console.log('no pre-filled passord')
                 } else {
                     elm.click()
