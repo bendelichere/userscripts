@@ -145,11 +145,6 @@
             && document.getElementById("password").value.length > 0) {
                 setTimeout(()=>elm.click(), 200);
             }
-            else {
-                console.log('not ready')
-                console.log(document.getElementById("email").value)
-                console.log(document.getElementById("password").value)
-            }
         });
     }
 
