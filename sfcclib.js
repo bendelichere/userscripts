@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      24.3.13.1
-// @icon         https://c1.sfdcstatic.com/content/dam/web/en_us/www/images/home/logo-salesforce-m.svg
+// @version      25.8.27.1
+// @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
 // @include        https://*.demandware.net/*
@@ -50,6 +50,7 @@
             bmAddSearchOrdersSelectAllLink();
             bmPromotionGuard();
             bmPrettySearchOrders();
+            bmPrettyCustomers();
             //NOT READY//bmClickFriendlyMenu();
             bmEnhanceDataReplicationHistory()
         } else if (isStorefront()) {
@@ -84,7 +85,7 @@
         // are we in orders listing page ?
         let pageTitleElement = document.getElementsByClassName('overview_title')
         if (pageTitleElement.length == 0) return
-        if (pageTitleElement[0].innerHTML !== 'Data Replication Processes') return
+        if (pageTitleElement[0].innerHTML.indexOf('Orders') < 0) return
 
         if (document.getElementsByClassName('overview_title').length === 0) return
         if (document.getElementsByClassName('overview_title')[0].innerHTML.indexOf('Orders') === null) return
@@ -103,6 +104,29 @@
         document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(34) > td:nth-child(5)').setAttribute('width','')
         var searchExtensions = document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML
         document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML = searchExtensions.replace(/,/g,'<br>')
+    },
+
+    bmPrettyCustomers = function () {
+        // are we in customers listing page ?
+        let pageTitleElement = document.getElementsByClassName('infobox_title_search')
+        if (pageTitleElement.length == 0) return
+        if (pageTitleElement[0].innerHTML.indexOf('Customer') < 0) return
+
+        //if (document.getElementsByClassName('overview_title').length === 0) return
+        //if (document.getElementsByClassName('overview_title')[0].innerHTML.indexOf('Orders') === null) return
+        //overview_title
+        //OrderListForm
+
+        document.querySelector('#C form table').setAttribute('width','')
+        document.querySelector('#D table').setAttribute('width','')
+
+        //document.querySelector('#bm_content_column > table > tbody > tr > td > table > tbody > tr > td.top > form > div:nth-child(4) > table').setAttribute('width','')
+        //document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(1)').setAttribute('width','')
+        //document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(2)').setAttribute('width','')
+        //document.querySelector('#D > form > table.infobox.w.e.s').style = ''
+        //document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(34) > td:nth-child(5)').setAttribute('width','')
+        //var searchExtensions = document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML
+        //document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML = searchExtensions.replace(/,/g,'<br>')
     },
 
     bmPromotionGuard = function () {
@@ -493,9 +517,9 @@
     bmSortSites = function () {
         // re order select drop-down
         var selectList = document.getElementById('SelectedSiteID');
-        var options = selectList.getElementsByTagName('option');
+        var options = selectList?.getElementsByTagName('option');
         var siteCounter = -1;
-        for(let i = 0; i < options.length; i++){
+        for(let i = 0; i < options?.length; i++){
             for(let j = 0; j < options.length - (i + 1); j++){
                 let nextA = options.item(j);
                 let nextB = options.item(j+1);
