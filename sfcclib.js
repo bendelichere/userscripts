@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      25.8.27.1
+// @version      25.10.7.1
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -51,6 +51,7 @@
             bmPromotionGuard();
             bmPrettySearchOrders();
             bmPrettyCustomers();
+            bmModernSwitchAdminMerchTools();
             //NOT READY//bmClickFriendlyMenu();
             bmEnhanceDataReplicationHistory()
         } else if (isStorefront()) {
@@ -58,6 +59,12 @@
             sfCartShowSkus()
             sfPdpShowSkus()
         }
+    },
+
+    bmModernSwitchAdminMerchTools = () => {
+        var adminLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(4)");
+        var merchToolsLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(5)");
+        merchToolsLi.parentNode.insertBefore(merchToolsLi, adminLi);
     },
 
     bmEnhanceDataReplicationHistory = () => {
