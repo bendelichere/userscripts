@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      25.10.29.4
+// @version      25.10.30.1
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
 // @include        https://*.demandware.net/*
+// @include        https://*.demandware.com/*
 // @include        https://*.salesforce.com/*
 // @include        https://*.billabong*.*
 // @include        https://*.element*.*
@@ -59,8 +60,23 @@
             sfCustomPrdAutoFill()
             sfCartShowSkus()
             sfPdpShowSkus()
+        } else if (isDWComSSO()) {
+          dwSSOAutoLogin();
         }
     },
+
+        dwSSOAutoLogin = () => {
+          waitForElm('#username').then((elm)=>{
+            let usrObj = document.querySelector('#username')
+            let btnObj = document.querySelector('#kc-login')
+            if (usrObj.value.length > 0) btnObj.click();
+          })
+          waitForElm('#password').then((elm)=>{
+            let pwdObj = document.querySelector('#password')
+            let btnObj = document.querySelector('#kc-login')
+            if (pwdObj.value.length > 0) btnObj.click();
+          })
+        },
 
         bmModernRedesignMenu = () => {
             // NEW STYLE
@@ -747,6 +763,10 @@
             else if (window.location.host.indexOf('/RX-') >= 0 ) return true
             else if (window.location.host.indexOf('/DC-') >= 0 ) return true
             else return false
+        },
+
+        isDWComSSO = () => {
+          return document.querySelectorAll('#kc-form-login').length > 0;
         },
 
         isProduction = () => {
