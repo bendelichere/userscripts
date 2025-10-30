@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      25.10.30.1
+// @version      25.10.30.2
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -65,6 +65,8 @@
         }
     },
 
+        dqs = (s) => {return document.querySelector(s)},
+
         dwSSOAutoLogin = () => {
           waitForElm('#username').then((elm)=>{
             let usrObj = document.querySelector('#username')
@@ -80,14 +82,28 @@
 
         bmModernRedesignMenu = () => {
             // NEW STYLE
-            GM_addStyle('#globalfooter {font-size: 8px;}ccbm.ldsbm ccbm div.slds-context-bar__primary {height: 34px;padding-bottom: 0px;margin-top: 0px;margin-bottom: 0px;}.slds-template_app {padding: 0px;}img.header__logo-image {height: 10px !important;}div.slds-global-header__logo {position: absolute;right: 120px;}div.slds-global-header__item {padding-top: 4px;}ul.slds-global-actions:nth-child(2) {height: 10px;}div.slds-p-horizontal_medium.slds-p-top_medium.nav_expand_only {padding: 0px;}section.slds-popover:nth-child(3) {left: 8px !important;}.slds-dropdown_length-with-icon-7,.slds-dropdown--length-with-icon-7 {overflow-y: inherit;}ccbm .slds-p-horizontal_medium,ccbm .slds-p-horizontal--medium div {padding-left: 0rem;padding-right: 0rem;}ccbm .slds-p-top_medium,ccbm .slds-p-top--medium div {padding-top: 0rem;}span.slds-context-bar__label-action.slds-context-bar__app-name.nav_expand_only.slds-truncate,.appswitcher-hide_from_search,main.ldsbm-homepage article.header,.bm-menu-search-bar div,ul.slds-global-actions li:nth-child(1),ul.slds-global-actions li:nth-child(2),ul.slds-global-actions li:nth-child(3) {display: none !important;}div.slds-p-horizontal_medium:nth-child(1),div.slds-p-horizontal_medium:nth-child(2) {position: fixed;top: 0px;left: 0px;}div.slds-grid_align-spread {padding-left: 32px;}ccbm.cc-Staging {--cc-bm-instance-color-light: #cae3f9;} ccbm.cc-Production {--cc-bm-instance-color-light: #eccfc9;}ccbm.cc-Sandbox {--cc-bm-instance-color-light: #ece6c9;} #bens_topmenu_context_switcher {display: flex;position: fixed;top: 2px;}#bens_topmenu_context_switcher_merchant_tools,#bens_topmenu_context_switcher_administration {display: flex;padding-top: 5px;padding-left: 10px;}#bens_topmenu_context_switcher_merchant_tools svg,#bens_topmenu_context_switcher_administration svg {padding-right: 4px;} .slds-notification-badge.slds-incoming-notification.slds-show-notification{position:fixed;top:2px;right: 81px}div.slds-text-align_center.slds-p-top_small.nav_collapsed_only.collapsed-width-limited.slds-text-align_center.slds-context-bar__app-short-name {display: block !important;}.slds-nav-vertical__action {padding: 0.25rem 1rem 0.25rem 1rem;} ccbm .slds-template_app {padding: inherit;}');
+            GM_addStyle('#globalfooter {font-size: 8px;}ccbm.ldsbm ccbm div.slds-context-bar__primary {height: 34px;padding-bottom: 0px;margin-top: 0px;margin-bottom: 0px;}.slds-template_app {padding: 0px;}img.header__logo-image {height: 10px !important;}div.slds-global-header__logo {position: absolute;right: 120px;}div.slds-global-header__item {padding-top: 4px;}ul.slds-global-actions:nth-child(2) {height: 10px;}div.slds-p-horizontal_medium.slds-p-top_medium.nav_expand_only {padding: 0px;}section.slds-popover:nth-child(3) {left: 8px !important;}.slds-dropdown_length-with-icon-7,.slds-dropdown--length-with-icon-7 {overflow-y: inherit;}ccbm .slds-p-horizontal_medium,ccbm .slds-p-horizontal--medium div {padding-left: 0rem;padding-right: 0rem;}ccbm .slds-p-top_medium,ccbm .slds-p-top--medium div {padding-top: 0rem;}span.slds-context-bar__label-action.slds-context-bar__app-name.nav_expand_only.slds-truncate,.appswitcher-hide_from_search,main.ldsbm-homepage article.header,.bm-menu-search-bar div,ul.slds-global-actions li:nth-child(1),ul.slds-global-actions li:nth-child(2),ul.slds-global-actions li:nth-child(3) {display: none !important;}div.slds-p-horizontal_medium:nth-child(1),div.slds-p-horizontal_medium:nth-child(2) {position: fixed;top: 0px;left: 0px;}div.slds-grid_align-spread {padding-left: 32px;}ccbm.cc-Staging {--cc-bm-instance-color-light: #cae3f9;}ccbm.cc-Production {--cc-bm-instance-color-light: #e0a599;}ccbm.cc-Sandbox {--cc-bm-instance-color-light: #ece6c9;}#bens_topmenu_context_switcher {display: flex;position: fixed;top: 2px;}#bens_topmenu_context_switcher_merchant_tools,#bens_topmenu_context_switcher_administration {display: flex;position: relative;top: 6px;padding: 4px 8px 2px 8px;margin: 0px 5px 0px 0px;}#bens_topmenu_context_switcher_merchant_tools *,#bens_topmenu_context_switcher_administration * {text-decoration-style: none !important;}.slds-notification-badge.slds-incoming-notification.slds-show-notification {position: fixed;top: 2px;right: 81px}div.slds-text-align_center.slds-p-top_small.nav_collapsed_only.collapsed-width-limited.slds-text-align_center.slds-context-bar__app-short-name {display: block !important;}');
  
             // ADD MERCH/ADMIN LINKS IN HEADER
             let mainDiv = document.querySelector('.slds-col.slds-brand-band.ldsbm-overflow_none-overridable.ldsbm-h-full')
             let leDivCtxSwitcher = document.createElement('div')
             leDivCtxSwitcher.setAttribute('id', 'bens_topmenu_context_switcher')
-            leDivCtxSwitcher.innerHTML = '<div id="bens_topmenu_context_switcher_merchant_tools"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dQS-FR/ViewBM-Home" data-automation="[BMNav] appLauncher link __bm_merchant"><span data-automation="[BMNav] appLauncher name __bm_merchant"><svg class="aslds-icon slds-icon_small" aria-hidden="true"><use xlink:href="/on/demandware.static/Sites-Site/-/default/vf7eca94b613d1b64c83672a8060aa3d91e74d068/slds/icons/utility-sprite/svg/symbols.svg#store"></use></svg>Merchant Tools</span></a></div><div id="bens_topmenu_context_switcher_administration"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_admin%3bsite%3dQS-FR/ViewSetup-Home" data-automation="[BMNav] appLauncher link __bm_admin"><span class="slds-listbox__option-text slds-listbox__option-text_entity appswitcher-searchtext" data-automation="[BMNav] appLauncher name __bm_admin"><svg class="aslds-icon slds-icon_small" aria-hidden="true"><use xlink:href="/on/demandware.static/Sites-Site/-/default/vf7eca94b613d1b64c83672a8060aa3d91e74d068/slds/icons/utility-sprite/svg/symbols.svg#custom_apps"></use></svg>Administration</span></a></div>';
+            leDivCtxSwitcher.innerHTML = '<div id="bens_topmenu_context_switcher_merchant_tools"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dQS-FR/ViewBM-Home">Merchant Tools</a></div><div id="bens_topmenu_context_switcher_administration"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_admin%3bsite%3dQS-FR/ViewSetup-Home">Administration</a></div>';
             mainDiv.prepend(leDivCtxSwitcher)
+
+            // BOLD CONTEXTUALISED HEADER LINK
+            let tabCtx = dqs('div.slds-text-align_center:nth-child(3)')
+            let merchLink = dqs('#bens_topmenu_context_switcher_merchant_tools')
+            let adminLink = dqs('#bens_topmenu_context_switcher_administration')
+            let boldify = (o) => {
+              o.style.textTransform = 'uppercase'
+              o.style.fontWeight = 'bold'
+              o.style.color = '#ffffff'
+              o.style.backgroundColor = '#014486'
+            }
+            if (tabCtx.innerHTML.trim() == 'Merch') boldify(merchLink)
+            else boldify(adminLink)
+            tabCtx.remove()
 
             // CLEAN DROPDOWN
             let adminLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(4)");
@@ -106,7 +122,7 @@
             })
 
             // COLLAPSE LEFT MENU
-            document.querySelector('#bm-menu-collapse').click()
+            //document.querySelector('#bm-menu-collapse').click()
         },
 
         bmEnhanceDataReplicationHistory = () => {
