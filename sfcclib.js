@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      25.10.31.1
+// @version      25.11.20.1
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -81,48 +81,106 @@
         },
 
         bmModernRedesignMenu = () => {
-            // NEW STYLE
-            GM_addStyle('#globalfooter {font-size: 8px;}ccbm.ldsbm ccbm div.slds-context-bar__primary {height: 34px;padding-bottom: 0px;margin-top: 0px;margin-bottom: 0px;}.slds-template_app {padding: 0px;}img.header__logo-image {height: 10px !important;}div.slds-global-header__logo {position: absolute;right: 120px;}div.slds-global-header__item {padding-top: 4px;}ul.slds-global-actions:nth-child(2) {height: 10px;}div.slds-p-horizontal_medium.slds-p-top_medium.nav_expand_only {padding: 0px;}section.slds-popover:nth-child(3) {left: 8px !important;}.slds-dropdown_length-with-icon-7,.slds-dropdown--length-with-icon-7 {overflow-y: inherit;}ccbm .slds-p-horizontal_medium,ccbm .slds-p-horizontal--medium div {padding-left: 0rem;padding-right: 0rem;}ccbm .slds-p-top_medium,ccbm .slds-p-top--medium div {padding-top: 0rem;}span.slds-context-bar__label-action.slds-context-bar__app-name.nav_expand_only.slds-truncate,.appswitcher-hide_from_search,main.ldsbm-homepage article.header,.bm-menu-search-bar div,ul.slds-global-actions li:nth-child(1),ul.slds-global-actions li:nth-child(2),ul.slds-global-actions li:nth-child(3) {display: none !important;}div.slds-p-horizontal_medium:nth-child(1),div.slds-p-horizontal_medium:nth-child(2) {position: fixed;top: 0px;left: 0px;}div.slds-grid_align-spread {padding-left: 32px;}ccbm.cc-Staging {--cc-bm-instance-color-light: #cae3f9;}ccbm.cc-Production {--cc-bm-instance-color-light: #e0a599;}ccbm.cc-Sandbox {--cc-bm-instance-color-light: #ece6c9;}#bens_topmenu_context_switcher {display: flex;position: fixed;top: 2px;}#bens_topmenu_context_switcher_merchant_tools,#bens_topmenu_context_switcher_administration {display: flex;position: relative;top: 6px;padding: 4px 8px 3px 8px;margin: 0px 5px 0px 0px;}#bens_topmenu_context_switcher_merchant_tools *,#bens_topmenu_context_switcher_administration * {text-decoration-style: none !important;}.slds-notification-badge.slds-incoming-notification.slds-show-notification {position: fixed;top: 2px;right: 81px}div.slds-text-align_center.slds-p-top_small.nav_collapsed_only.collapsed-width-limited.slds-text-align_center.slds-context-bar__app-short-name {display: block !important;}');
- 
-            // ADD MERCH/ADMIN LINKS IN HEADER
-            let mainDiv = document.querySelector('.slds-col.slds-brand-band.ldsbm-overflow_none-overridable.ldsbm-h-full')
-            let leDivCtxSwitcher = document.createElement('div')
-            leDivCtxSwitcher.setAttribute('id', 'bens_topmenu_context_switcher')
-            leDivCtxSwitcher.innerHTML = '<div id="bens_topmenu_context_switcher_merchant_tools"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dQS-FR/ViewBM-Home">Merchant Tools</a></div><div id="bens_topmenu_context_switcher_administration"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_admin%3bsite%3dQS-FR/ViewSetup-Home">Administration</a></div>';
-            mainDiv.prepend(leDivCtxSwitcher)
+          // ENV ?
+          /*let envCrtrdg = document.querySelector('.slds-global-header__logo span.slds-badge:nth-child(2)')
+          console.log(envCrtrdg)
+          const env = 'yolo'*/
 
-            // BOLD CONTEXTUALISED HEADER LINK
-            let tabCtx = dqs('div.slds-text-align_center:nth-child(3)')
-            let merchLink = dqs('#bens_topmenu_context_switcher_merchant_tools')
-            let adminLink = dqs('#bens_topmenu_context_switcher_administration')
-            let boldify = (o) => {
-              o.style.textTransform = 'uppercase'
-              o.style.fontWeight = 'bold'
-              o.style.color = '#ffffff'
-              o.style.backgroundColor = '#014486'
+          // BDE ?
+          const isBde = document.querySelector('[data-automation="[BMHeader] userProfile"]')?.title === "Benjamin Delichere"
+
+          // NEW STYLE
+          GM_addStyle('#globalfooter {font-size: 8px;}ccbm.ldsbm ccbm div.slds-context-bar__primary {height: 34px;padding-bottom: 0px;margin-top: 0px;margin-bottom: 0px;}.slds-template_app {padding: 0px;}img.header__logo-image {height: 10px !important;}div.slds-global-header__logo {position: absolute;right: 120px;}div.slds-global-header__item {padding-top: 4px;}ul.slds-global-actions:nth-child(2) {height: 10px;}div.slds-p-horizontal_medium.slds-p-top_medium.nav_expand_only {padding: 0px;}section.slds-popover:nth-child(3) {left: 8px !important;}.slds-dropdown_length-with-icon-7,.slds-dropdown--length-with-icon-7 {overflow-y: inherit;}ccbm .slds-p-horizontal_medium,ccbm .slds-p-horizontal--medium div {padding-left: 0rem;padding-right: 0rem;}ccbm .slds-p-top_medium,ccbm .slds-p-top--medium div {padding-top: 0rem;}span.slds-context-bar__label-action.slds-context-bar__app-name.nav_expand_only.slds-truncate,.appswitcher-hide_from_search,main.ldsbm-homepage article.header,.bm-menu-search-bar div,ul.slds-global-actions li:nth-child(1),ul.slds-global-actions li:nth-child(2),ul.slds-global-actions li:nth-child(3) {display: none !important;}div.slds-p-horizontal_medium:nth-child(1),div.slds-p-horizontal_medium:nth-child(2) {position: fixed;top: 0px;left: 0px;}div.slds-grid_align-spread {padding-left: 32px;}ccbm.cc-Staging {--cc-bm-instance-color-light: #cae3f9;}ccbm.cc-Production {--cc-bm-instance-color-light: #e0a599;}ccbm.cc-Sandbox {--cc-bm-instance-color-light: #ece6c9;}#bens_topmenu_context_switcher {display: flex;position: fixed;top: 2px; text-transform: uppercase; font-weight: bold;}#bens_topmenu_context_switcher_merchant_tools,#bens_topmenu_context_switcher_administration {display: flex;position: relative;top: 2px;padding: 4px 8px 7px 8px;margin: 0px 5px 0px 0px;}#bens_topmenu_context_switcher_merchant_tools *,#bens_topmenu_context_switcher_administration * {text-decoration-style: none !important;}.slds-notification-badge.slds-incoming-notification.slds-show-notification {position: fixed;top: 2px;right: 81px}div.slds-text-align_center.slds-p-top_small.nav_collapsed_only.collapsed-width-limited.slds-text-align_center.slds-context-bar__app-short-name {display: block !important;}div.curtab {text-transform:uppercase;font-weight:bold;color:#fff;}.sbxenv {background-color:#807129;}.stgenv {background-color:#09429b;}.devenv {background-color:#194e31;}.prdenv {background-color:#8e030f;}.gradient_sbx {background-image: none,linear-gradient(0deg,rgba(1,68,134,0) 0,#807129);}.gradient_prd {background-image: none,linear-gradient(0deg,rgba(1,68,134,0) 0,#8e030f);}.gradient_stg {background-image: none,linear-gradient(0deg,rgba(1,68,134,0) 0,#014486);}.gradient_dev {background-image: none,linear-gradient(0deg,rgba(1,68,134,0) 0,#194e31);}.slds-m-around_medium,.slds-m-around--medium {margin: 5px;}ccbm.ldsbm #leftside.collapsed, .collapsed-width-limited {width: 3rem;}ccbm.ldsbm #nav-flyout {left: 3rem;}.ldsbm .dwClassic textarea, .ldsbm .dwClassic select, .ldsbm .dwClassic input[type="file"] {min-width: unset;}.infobox select{width: unset;}ccbm .ldsbm-homepage {gap: unset;}ccbm.ldsbm #nav-flyout[hidden] {left: -12.5rem;}.slds-p-around_x-small, .slds-p-around--x-small {padding: 0.2rem 0.1rem 0.0rem 0.1rem;}ccbm.ldsbm .slds-brand-band::before, div.customModule-wrapper .customModule-main::before {background-image: unset;}#leftside.collapsed section.slds-m-top_medium {display: none;}#leftnav-collapsed {-ms-overflow-style: none;  scrollbar-width: none;}');
+
+          // ADD MERCH/ADMIN LINKS IN HEADER
+          let mainDiv = document.querySelector('.slds-col.slds-brand-band.ldsbm-overflow_none-overridable.ldsbm-h-full')
+          let leDivCtxSwitcher = document.createElement('div')
+          leDivCtxSwitcher.setAttribute('id', 'bens_topmenu_context_switcher')
+          leDivCtxSwitcher.innerHTML = '<div id="bens_topmenu_context_switcher_merchant_tools"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dQS-FR/ViewBM-Home">Merchant Tools</a></div><div id="bens_topmenu_context_switcher_administration"><a class="slds-text-link_reset" href="/on/demandware.store/Sites-Site/default%3bapp%3d__bm_admin%3bsite%3dQS-FR/ViewSetup-Home">Administration</a></div>';
+          mainDiv.prepend(leDivCtxSwitcher)
+
+          // CLEAN DROPDOWN
+          let adminLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(4)");
+          let merchToolsLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(5)");
+          adminLi.remove()
+          merchToolsLi.remove()
+
+          // REWRITE ENV CARTRIDGE
+          let envCart = document.querySelector('.slds-global-header__logo span.slds-badge:nth-child(2)')
+          let envCartContentsArray = envCart.innerHTML.split(' ')
+          let envName = envCartContentsArray.pop().split('<').shift()
+          envCart.innerHTML = envName
+
+          // BOLD CONTEXTUALISED HEADER LINK
+          let tabCtx = dqs('div.slds-text-align_center:nth-child(3)')
+          let merchLink = dqs('#bens_topmenu_context_switcher_merchant_tools')
+          let adminLink = dqs('#bens_topmenu_context_switcher_administration')
+          let curTab = (tabCtx.innerHTML.trim() == 'Merch') ? merchLink : adminLink;
+          let envCode = 'sbx'
+          curTab.classList.add('curtab')
+          console.log(envName)
+          if (envName == 'development') {
+            envCode = 'dev'
+            curTab.classList.add('devenv')
+          } else if (envName == 'staging') {
+            envCode = 'stg'
+            curTab.classList.add('stgenv')
+          } else if (envName == 'production') {
+            envCode = 'prd'
+            curTab.classList.add('prdenv')
+          } else {
+            envCode = 'sbx'
+            curTab.classList.add('sbxenv')
+          }
+          tabCtx.remove()
+          dqs('ccbm.ldsbm .slds-brand-band, div.customModule-wrapper .customModule-main').classList.add('gradient_'+envCode)
+
+          waitForElm('.infobox select').then((elm)=>{
+            document.querySelectorAll('.infobox select').forEach((e)=>e.style.width='');
+          })
+
+          // MORE VISIBLE SITE NAME
+          let siteName = dqs('#siteselect-collapsed input').value;
+          if (tabCtx.innerHTML.trim() == 'Merch') dqs('#bens_topmenu_context_switcher_merchant_tools').innerHTML=siteName
+          
+          // MOVE ALERT BADGE WHERE IT CAN BE SEEN
+          waitForElm('span.slds-notification-badge.slds-incoming-notification.slds-show-notification').then((elm)=>{
+            document.querySelector('#header-alerts').append(elm)
+          })
+
+          // AUTO COLLAPSE LEFT MENU (for bde only :p)
+          if (isBde) {
+            document.querySelector('#bm-menu-collapse button').click()
+          }
+          // AUTO-TOGGLE ALL LEFTNAV MENU ITEMS (for bde only :p)
+          if (isBde) {
+            document.querySelectorAll('#leftnav div:not(.slds-is-open) button').forEach((e)=>e.click())
+          }
+
+          // WIP - MOVE SEARCH BAR
+          /*waitForElm('#app-launcher-body li:nth-child(1) div').then((elm)=> {
+            let newSearchDiv = elm.clone()
+            let topBar = document.querySelector('ccbm ccbm')
+            //elm.remove()
+            //topBar.append(elm);
+          })*/
+
+          // WIP -  ON KEY DOWN DO SEARCH
+          /*document.onkeypress = function (e) {
+            e = e || window.event;
+            // use e.keyCode
+            console.log(e.keyCode)
+          };*/
+          /*document.addEventListener("keypress", function(e) {
+            if (e.keyCode == 27) {
+              alert('hi.');
+            } else {
+              console.log(event)
             }
-            if (tabCtx.innerHTML.trim() == 'Merch') boldify(merchLink)
-            else boldify(adminLink)
-            tabCtx.remove()
+          });*/
 
-            // CLEAN DROPDOWN
-            let adminLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(4)");
-            let merchToolsLi = document.querySelector(".slds-dropdown_length-with-icon-7.slds-dropdown_fluid ul.slds-listbox.slds-listbox_vertical li:nth-child(5)");
-            adminLi.remove()
-            merchToolsLi.remove()
+          ;
 
-            // REWRITE ENV CARTRIDGE
-            let envCart = document.querySelector('.slds-global-header__logo span.slds-badge:nth-child(2)')
-            let envCartContentsArray = envCart.innerHTML.split(' ')
-            envCart.innerHTML = envCartContentsArray.pop()
-
-            // MOVE ALERT BADGE WHERE IT CAN BE SEEN
-            waitForElm('span.slds-notification-badge.slds-incoming-notification.slds-show-notification').then((elm)=>{
-                document.querySelector('#header-alerts').append(elm)
-            })
-
-            // COLLAPSE LEFT MENU
-            //document.querySelector('#bm-menu-collapse').click()
         },
 
         bmEnhanceDataReplicationHistory = () => {
