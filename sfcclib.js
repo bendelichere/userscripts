@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      26.2.1.1
+// @version      26.2.1.2
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -123,9 +123,9 @@
 
 
       bmModernRedesignMenu = () => {
-        console.error('meeeh');
-        console.log('hey');
-        console.log(document.querySelector('#nav-flyout'));
+        //console.error('meeeh');
+        //console.log('hey');
+        //console.log(document.querySelector('#nav-flyout'));
         if (!isModernBm()) return;
 
         // ENV ?
