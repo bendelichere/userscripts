@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      26.2.1.2
+// @version      26.2.24.1
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -703,27 +703,34 @@
       bmAddDataRepLinks = function () {
         const allBrands = {'brd': ['QS','RX','DC'], 'bbg': ['BB','RV','EL']};
 
-        if (jQuery('td:contains("Replication Tasks")').length == 0) return;
-        let rows = jQuery('td.dep_check:has(input[name=SelectedGroupID])');
-        window.clickAllCheckboxAlike = function(checkboxId,brand) {
+        let clickAllCheckboxAlike = function(checkboxId,brand) {
           if (brand) {
             jQuery('[name="siteHeader_expanded"] tr:contains("'+brand+'") input[value$="'+checkboxId+'"]').click();
           } else {
             jQuery('input[value$="'+checkboxId+'"]').click();
           }
         };
+
+        if (jQuery('td:contains("Replication Tasks")').length == 0) return;
+        let rows = jQuery('td.dep_check:has(input[name=SelectedGroupID])');
         rows.each(function(){
           if (jQuery(this).closest('table').find('td.main_dep.n.s.e:contains("Global")').length>0) return;
           var checkboxIdArr = jQuery(this).find('input[type=checkbox]').val().split('_');
           checkboxIdArr.shift();
           var checkboxId = checkboxIdArr.join('_');
           var currentBrand = jQuery(this).closest('table').find('tr:nth-child(2)').find('td:nth-child(4)').text().replace('&nbsp;','').split('-');
-          var allLink = jQuery('#SelectAll').clone().text("ALL").attr("onclick",'clickAllCheckboxAlike("'+checkboxId+'")');
+
+          var allLink = '<a href="" class="dataRepLinkSelector" data-checkboxId="'+checkboxId+'" data-brand="">ALL</a>'
           jQuery(this).next('td').append(' ').append(allLink);
+
           if (currentBrand.length == 2) {
-            var sameBrandLink = jQuery('#SelectAll').clone().text(currentBrand[0]).attr("onclick",'clickAllCheckboxAlike("'+checkboxId+'","'+currentBrand[0]+'")');
+            var sameBrandLink = '<a href="" class="dataRepLinkSelector" data-checkboxId="'+checkboxId+'" data-brand="'+currentBrand[0]+'">'+currentBrand[0]+'</a>'
             jQuery(this).next('td').append(' ').append(sameBrandLink);
           }
+        });
+        jQuery('.dataRepLinkSelector').on('click',function(e){
+          e.preventDefault();
+          clickAllCheckboxAlike(e.currentTarget.dataset.checkboxid,e.currentTarget.dataset.brand);
         });
       },
 
