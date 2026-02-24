@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib
 // @namespace    napali.boardriders
-// @version      26.2.1.2
+// @version      26.2.24.1
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
