@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SFCC lib BETA
 // @namespace    napali.boardriders
-// @version      26.2.24.2
+// @version      26.2.24.3
 // @icon         https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-no-type-logo.svg
 // @description  let's enhance some stuff (BM & logs ... mainly)
 // @author       Benjamin Delichere
@@ -248,14 +248,10 @@
         // COLLAPSED COOKIE
         const isCollapsedCookieName = 'gm_sfcclib_leftnav_iscollapsed'
         let isCollapsed = GM_getValue(isCollapsedCookieName, false)
-        console.log('collapsed ?')
-        console.log(dqs('#leftside #bm-menu-collapse'));
-        console.log(dqs('#leftside #leftnav-collapsed').style.display);
-        //console.log('isCollapsed before setValue : '+isCollapsed)
-        //GM_setValue(isCollapsedCookieName, true);
-        //console.log('isCollapsed after setValue : '+GM_getValue(isCollapsedCookieName,'???'))
-
-
+        //console.log('collapsed ?')
+        //  console.log(dqs('#leftside #bm-menu-collapse'));
+        //  console.log(dqs('#leftside #leftnav-collapsed').style.display);
+        
         // WIP - MOVE SEARCH BAR
         /*waitForElm('#app-launcher-body li:nth-child(1) div').then((elm)=> {
             let newSearchDiv = elm.clone()
@@ -303,7 +299,6 @@
       },
 
       bmPrettySearchOrders = function () {
-
         // are we in orders listing page ?
         let pageTitleElement = document.getElementsByClassName('overview_title')
         if (pageTitleElement.length == 0) return
@@ -314,18 +309,20 @@
         //overview_title
         //OrderListForm
 
-        document.querySelector('#C form table').setAttribute('width','')
-        document.querySelector('#D table').setAttribute('width','')
-        document.querySelector('#E form table').setAttribute('width','')
+        document.querySelector('#C form table')?.setAttribute('width','')
+        document.querySelector('#D table')?.setAttribute('width','')
+        document.querySelector('#E form table')?.setAttribute('width','')
 
 
-        document.querySelector('#bm_content_column > table > tbody > tr > td > table > tbody > tr > td.top > form > div:nth-child(4) > table').setAttribute('width','')
-        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(1)').setAttribute('width','')
-        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(2)').setAttribute('width','')
+        //BROKENdocument.querySelector('#bm_content_column > table > tbody > tr > td > table > tbody > tr > td.top > form > div:nth-child(4) > table')?.setAttribute('width','')
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(1)')?.setAttribute('width','')
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(2) > td:nth-child(2)')?.setAttribute('width','')
         document.querySelector('#D > form > table.infobox.w.e.s').style = ''
-        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(34) > td:nth-child(5)').setAttribute('width','')
-        var searchExtensions = document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML
-        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML = searchExtensions.replace(/,/g,'<br>')
+        document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(34) > td:nth-child(5)')?.setAttribute('width','')
+        //BROKENlet searchExtensions = document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)').innerHTML||'';
+        //console.log('>>>')
+        //console.log(searchExtensions)
+        //document.querySelector('#D > form > table:nth-child(9) > tbody > tr:nth-child(20) > td:nth-child(1)')?.setHTML(searchExtensions.replace(/,/g,'<br>'))
       },
 
       bmPrettyCustomers = function () {
@@ -712,7 +709,6 @@
             }
           }
         }
-        //console.log('[bmSortSites] '+siteCounter+' sites re-ordered');
       },
 
       bmAddDataRepLinks = function () {
@@ -809,7 +805,6 @@
             jQuery('#unitSelection ul ul ul div[ext\\:tree-node-id^='+nameStart+'][ext\\:tree-node-id$='+nameEnd+'] input[type=checkbox]').click();
           };
           allSubCheckboxes.each(function(){
-            // <div ext:tree-node-id="SiteExport_QS-AT_ABTestExport" class="x-tree-node-el x-tree-node-leaf "><div class="x-tree-col" style="width:398px;"><span class="x-tree-node-indent"><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-elbow-line"><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-elbow-line"></span><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-ec-icon x-tree-elbow"><img src="/on/demandware.static/Sites-Site/-/default/v4e9c6a5f96a8eb3a9b5553af09725016d2b47531/jscript/ext/resources/images/default/s.gif" class="x-tree-node-icon tree_file_icon" unselectable="on"><input class="x-tree-node-cb" type="checkbox"><span unselectable="on">A/B Tests</span></div><div class="x-tree-col " style="width:398px;"><div class="x-tree-col-text">A/B tests of site "QS-AT"</div></div><div class="x-clear"></div></div>
             let span = jQuery(this).parent().find('span').last();
             let divId = jQuery(span).parent().parent().attr('ext:tree-node-id');
             let brand = divId.split('_')[1].split('-').first();
